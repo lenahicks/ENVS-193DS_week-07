@@ -1,0 +1,86 @@
+---
+title: "ENVS 193DS Week 7"
+author: "Lena Hicks"
+date: "5/17/2023"
+output: html_document
+execute:
+  warning: false
+  message: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+```{r libraries}
+library(tidyverse)
+library(here)
+library(lterdatasampler)
+
+library(performance)
+library(broom)
+library(ggeffects)
+library(ggmice)
+library(janitor)
+```
+
+# Linear Models
+
+How does stem length _predict_ stem dry mass?
+
+```{r filtering-data}
+maples_data <- hbr_maples %>% 
+  clean_names() %>% 
+  filter( year == 2003 & watershed == "Reference")
+  
+```
+
+Visualizing missing data:
+
+```{r missing-data-vis}
+```
+
+Create an exploratory data visulaization:
+
+```{r data-vis}
+ggplot(data = maples_data, aes(x = stem_length, y = stem_dry_mass))+
+  geom_point()
+```
+
+
+let's try a model:
+
+```{r linear-model-maples}
+maples_model <- lm(stem_dry_mass ~ stem_length, data = maples_data)
+
+maples_model
+```
+
+Check assumptions
+
+1. linear relationship between variables: yes! (used the exploratory visulaization to check that)
+2. independence of errors: yes! (making that assumption based on how data was collected)
+3. homeskedasticiity of errors: yes! (making that descion from residual vs fitted plot/scale-location plots)
+4. normally distributed errors: yes! (looking at QQ plot of residuals)
+
+To get plots for last two assumptions, put plot(data set) in console and hit return for each plot
+
+```{r checking-assumptions}
+#allows us to plot same plots in one same grid
+par(mfrow = c(2, 2))
+plot(maples_model)
+```
+
+
+turn off the 2x2 grid
+
+```{r turning-off-the-grid, results = FALSE}
+dev.off()
+```
+
+
+
+
+
